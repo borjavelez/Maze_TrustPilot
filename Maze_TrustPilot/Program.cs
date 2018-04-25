@@ -376,7 +376,7 @@ namespace Maze_TrustPilot
                     }
                 }
             }
-            Console.WriteLine("Alternative escaping path calculated in " + escapePath.Count + " steps");
+            Console.WriteLine("Alternative escape path calculated in " + escapePath.Count + " steps");
             return escapePath.ToArray();
 
         }
