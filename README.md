@@ -5,7 +5,7 @@ Firstly we must parse the JSON file and to create the different positions with t
 Each position will have coordinates (north, south, east and west) as booleans, being true those who are accesible (no walls).
 
 In this solution, the program is going to calculate the path, before making any movements, using a trial and error algorithm.
-Starting from the current position of the pony, the pony is going to move until it reaches one point with no exit, then that position is going
+Starting from the current position of the pony, the program is going to move until it reaches one point with no exit, then that position is going
 to be marked as inaccesible by changing the coordinates information of the neighbor positions.
 By doing that, all the ways that lead to a close end will be innacessible by our pony.
 Once the path has been calculated the movements will be sent to the provided API, and the real pony is going to follow the given directions.
