@@ -1,0 +1,11 @@
+C:\Users\Borja\source\repos\Maze_TrustPilot\Maze_TrustPilot\bin\Debug\netcoreapp2.0\Maze_TrustPilot.deps.json
+C:\Users\Borja\source\repos\Maze_TrustPilot\Maze_TrustPilot\bin\Debug\netcoreapp2.0\Maze_TrustPilot.runtimeconfig.json
+C:\Users\Borja\source\repos\Maze_TrustPilot\Maze_TrustPilot\bin\Debug\netcoreapp2.0\Maze_TrustPilot.runtimeconfig.dev.json
+C:\Users\Borja\source\repos\Maze_TrustPilot\Maze_TrustPilot\bin\Debug\netcoreapp2.0\Maze_TrustPilot.dll
+C:\Users\Borja\source\repos\Maze_TrustPilot\Maze_TrustPilot\obj\Debug\netcoreapp2.0\Maze_TrustPilot.csprojResolveAssemblyReference.cache
+C:\Users\Borja\source\repos\Maze_TrustPilot\Maze_TrustPilot\obj\Debug\netcoreapp2.0\Maze_TrustPilot.csproj.CoreCompileInputs.cache
+C:\Users\Borja\source\repos\Maze_TrustPilot\Maze_TrustPilot\obj\Debug\netcoreapp2.0\Maze_TrustPilot.AssemblyInfoInputs.cache
+C:\Users\Borja\source\repos\Maze_TrustPilot\Maze_TrustPilot\obj\Debug\netcoreapp2.0\Maze_TrustPilot.AssemblyInfo.cs
+C:\Users\Borja\source\repos\Maze_TrustPilot\Maze_TrustPilot\bin\Debug\netcoreapp2.0\Maze_TrustPilot.pdb
+C:\Users\Borja\source\repos\Maze_TrustPilot\Maze_TrustPilot\obj\Debug\netcoreapp2.0\Maze_TrustPilot.dll
+C:\Users\Borja\source\repos\Maze_TrustPilot\Maze_TrustPilot\obj\Debug\netcoreapp2.0\Maze_TrustPilot.pdb
