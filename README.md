@@ -16,3 +16,7 @@ To solve that, in case the Domokun gets into our path, the pony is going to calc
 going to choose the longest one as an "escape path". The pony it is going to run through that path with the Domokun chasing it.
 If the Domokun makes a mistake and leaves the end-point path, the Pony is going to stop and try to reach the end-point again.
 To reach the end-point again, the Domokun must make 2 mistakes in a row, which is very unlikely.
+
+If the Domokun positions himself between the pony and the path, the pony is going to run away and it is going to go
+back everytime the Domokun makes a mistake, to be ready in case the second mistake happen. This means that the maze
+may take a time to complete, because the pony will go back one position everytime the Domokun makes a mistake.

@@ -23,20 +23,20 @@ namespace Maze_TrustPilot
         static bool ponyDied = false;
         static String json;
         static Maze maze;
-        private static readonly HttpClient _httpClient = new HttpClient();
-        private static string _mazeId = "";
-        private static string _mazeUri = "";
+        private static readonly HttpClient httpClient = new HttpClient();
+        private static string mazeId = "";
+        private static string mazeUri = "";
 
         static void Main(string[] args)
         {
-            while (_mazeId != "quit")
+            while (mazeId != "quit")
             {
                 while (repeat)
                 {
                     repeat = false;
                     Console.WriteLine("Input the maze Id: (Write 'quit' to exit)");
-                    _mazeId = Console.ReadLine();
-                    _mazeUri = "https://ponychallenge.trustpilot.com/pony-challenge/maze/" + _mazeId;
+                    mazeId = Console.ReadLine();
+                    mazeUri = "https://ponychallenge.trustpilot.com/pony-challenge/maze/" + mazeId;
                     try
                     {
                         maze = new Maze();
@@ -149,7 +149,7 @@ namespace Maze_TrustPilot
             Maze m = maze;
 
             //Parse 
-            json = new WebClient().DownloadString(_mazeUri);
+            json = new WebClient().DownloadString(mazeUri);
             dynamic d = JObject.Parse(json);
             Position[] positions = new Position[weight * height];
 
@@ -225,12 +225,12 @@ namespace Maze_TrustPilot
             string direction = getCoordinate(position);
 
             string str = "{\"direction\":\"" + direction + "\"}";
-            _httpClient.DefaultRequestHeaders
+            httpClient.DefaultRequestHeaders
              .Accept
              .Add(new MediaTypeWithQualityHeaderValue("application/json"));
             using (var content = new StringContent(str, Encoding.UTF8, "application/json"))
             {
-                var result = await _httpClient.PostAsync($"{_mazeUri}", content).ConfigureAwait(false);
+                var result = await httpClient.PostAsync($"{mazeUri}", content).ConfigureAwait(false);
                 if (result.StatusCode == HttpStatusCode.OK)
                 {
                     return;
