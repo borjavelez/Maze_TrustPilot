@@ -31,6 +31,7 @@ namespace Maze_TrustPilot
         {
             while (mazeId != "quit")
             {
+                ponyDied = false;
                 while (repeat)
                 {
                     repeat = false;
@@ -134,7 +135,7 @@ namespace Maze_TrustPilot
                 {
                     positions[i].coordinates.Remove("west");
                 }
-                if (d.data[i].Count > 0 && d.data[i][0] == "north")
+                else if (d.data[i].Count > 0 && d.data[i][0] == "north")
                 {
                     positions[i].coordinates.Remove("north");
                 }
@@ -189,14 +190,7 @@ namespace Maze_TrustPilot
             using (var content = new StringContent(str, Encoding.UTF8, "application/json"))
             {
                 var result = await httpClient.PostAsync($"{mazeUri}", content).ConfigureAwait(false);
-                if (result.StatusCode == HttpStatusCode.OK)
-                {
-                    return;
-                }
-                else
-                {
-                    Console.WriteLine(result.ReasonPhrase);
-                }
+                return;
             }
 
 
@@ -301,21 +295,13 @@ namespace Maze_TrustPilot
             maze = getMaze();
 
             //Possible positions of the Domokun
-            int north = maze.domokunPosition - 15;
-            int south = maze.domokunPosition + 15;
-            int east = maze.domokunPosition + 1;
-            int west = maze.domokunPosition - 1;
-            int[] possiblePositions = { north, south, east, west };
-
-            if (possiblePositions.Contains(pos))
+            List<int> possiblePositions = new List<int>();
+            foreach (KeyValuePair<string, int> x in maze.positions[maze.domokunPosition].coordinates)
             {
-                return false;
+                possiblePositions.Add(x.Value);
+            }
 
-            }
-            else
-            {
-                return true;
-            }
+            return (!possiblePositions.Contains(pos));
         }
 
         //According to the pony's positions, gets a new position and returns the corresponding coordinate as a string.
@@ -329,10 +315,10 @@ namespace Maze_TrustPilot
             string direction = "";
 
             if (position == north) direction = "north";
-            if (position == south) direction = "south";
-            if (position == east) direction = "east";
-            if (position == west) direction = "west";
-            if (direction == "")
+            else if (position == south) direction = "south";
+            else if (position == east) direction = "east";
+            else if (position == west) direction = "west";
+            else if (direction == "")
             {
                 ponyDied = true;
             }
