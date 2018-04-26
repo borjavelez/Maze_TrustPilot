@@ -44,6 +44,7 @@ namespace Maze_TrustPilot
                     }
                     catch (Exception e)
                     {
+                        Console.WriteLine(e.Message);
                         repeat = true;
                         Console.WriteLine("Wrong id! Try again");
                     }
@@ -66,8 +67,8 @@ namespace Maze_TrustPilot
             Console.ReadLine();
         }
 
-        //Calculates the path from the current pony position to the end-point and returns a string
-        //with the positions that the pony must follow.
+        //Calculates the path from the current pony position to the end-point and returns an array of 
+        //ints with the positions the pony must follow
         public static int[] calculatePath()
         {
             List<int> temp = new List<int>();
@@ -75,68 +76,34 @@ namespace Maze_TrustPilot
             while (maze.ponyPosition != maze.endPoint)
             {
                 int pos = maze.ponyPosition;
+                bool flag = true;
+                if (maze.positions[pos].coordinates.Count() > 0)
+                {
 
-                //Try North
-                if (maze.positions[pos].north && !maze.positions[pos - 15].hasBeenChecked)
-                {
-                    maze.positions[pos].hasBeenChecked = true;
-                    maze.ponyPosition = pos - 15;
-                    temp.Add(maze.ponyPosition);
-                }
-                //Try West
-                else if (maze.positions[pos].west && !maze.positions[pos - 1].hasBeenChecked)
-                {
-                    maze.positions[pos].hasBeenChecked = true;
-                    maze.ponyPosition = pos - 1;
-                    temp.Add(maze.ponyPosition);
-                }
-                //Try East
-                else if (maze.positions[pos].east && !maze.positions[pos + 1].hasBeenChecked)
-                {
-                    maze.positions[pos].hasBeenChecked = true;
-                    maze.ponyPosition = pos + 1;
-                    temp.Add(maze.ponyPosition);
-                }
-                //Try South
-                else if (maze.positions[pos].south && !maze.positions[pos + 15].hasBeenChecked)
-                {
-                    maze.positions[pos].hasBeenChecked = true;
-                    maze.ponyPosition = pos + 15;
-                    temp.Add(maze.ponyPosition);
-                }
-                else
-                {
-                    //The way has a close end
-
-                    if (maze.positions[pos].north)
+                    foreach (KeyValuePair<string, int> x in maze.positions[pos].coordinates)
                     {
-                        maze.positions[pos - 15].south = false;
-                        maze.ponyPosition = pos - 15;
+                        if (!maze.positions[x.Value].hasBeenChecked)
+                        {
+                            maze.positions[pos].hasBeenChecked = true;
+                            maze.ponyPosition = x.Value;
+                            temp.Add(maze.ponyPosition);
+                            flag = false;
+                            break;
+                        }
                     }
 
-                    if (maze.positions[pos].west)
+                    if (flag)
                     {
-                        maze.positions[pos - 1].east = false;
-                        maze.ponyPosition = pos - 1;
+                        //The way has a close end
+                        foreach (KeyValuePair<string, int> x in maze.positions[pos].coordinates)
+                        {
+                            string posToDelete = maze.positions[x.Value].coordinates.FirstOrDefault(i => i.Value == pos).Key;
+                            maze.positions[x.Value].coordinates.Remove(posToDelete);
+                            maze.ponyPosition = x.Value;
+                        }
+                        temp.Remove(pos);
                     }
-
-                    if (maze.positions[pos].east)
-                    {
-                        maze.positions[pos + 1].west = false;
-                        maze.ponyPosition = pos + 1;
-                    }
-
-                    if (maze.positions[pos].south)
-                    {
-                        maze.positions[pos + 15].north = false;
-                        maze.ponyPosition = pos + 15;
-                    }
-
-                    //Those positions that lead to an end close will be removed from the list
-                    temp.Remove(pos);
-
                 }
-
             }
             return temp.ToArray();
         }
@@ -158,22 +125,22 @@ namespace Maze_TrustPilot
             for (int i = 0; i < (15 * 25); i++)
             {
                 positions[i] = new Position();
-                positions[i].north = true;
-                positions[i].west = true;
-                positions[i].east = true;
-                positions[i].south = true;
+                positions[i].coordinates = new Dictionary<string, int>();
+                positions[i].coordinates.Add("north", i - 15);
+                positions[i].coordinates.Add("west", i - 1);
                 positions[i].hasBeenChecked = false;
+
                 if (d.data[i].Count > 0 && d.data[i][0] == "west")
                 {
-                    positions[i].west = false;
+                    positions[i].coordinates.Remove("west");
                 }
                 if (d.data[i].Count > 0 && d.data[i][0] == "north")
                 {
-                    positions[i].north = false;
+                    positions[i].coordinates.Remove("north");
                 }
                 if (d.data[i].Count > 1 && d.data[i][1] == "north")
                 {
-                    positions[i].north = false;
+                    positions[i].coordinates.Remove("north");
                 }
             }
             #endregion
@@ -183,25 +150,16 @@ namespace Maze_TrustPilot
             for (int i = 0; i < (15 * 25); i++)
             {
                 //East
-                if (i < ((height * weight) - 1))
+                if (i < ((height * weight) - 1) && positions[i + 1].coordinates.ContainsKey("west"))
                 {
-                    positions[i].east = positions[i + 1].west;
+                    positions[i].coordinates.Add("east", i + 1);
                 }
 
                 //South
-                if (i < ((height * weight) - 16))
+                if (i < ((height * weight) - 16) && positions[i + 15].coordinates.ContainsKey("north"))
                 {
-                    positions[i].south = positions[i + 15].north;
+                    positions[i].coordinates.Add("south", i + 15);
                 }
-
-                //Last row
-                if (i >= (15 * 25) - 15)
-                {
-                    positions[i].south = false;
-                }
-
-                //Last tile
-                positions[(height * weight) - 1].east = false;
             }
             #endregion
 
@@ -237,6 +195,7 @@ namespace Maze_TrustPilot
                 }
                 else
                 {
+                    Console.WriteLine(result.ReasonPhrase);
                 }
             }
 
@@ -289,34 +248,28 @@ namespace Maze_TrustPilot
             }
 
             maze = getMaze();
-
-
-
         }
 
-        //This method it is going to calculate the longest path from the current position out of 10 different paths, 
-        //so the pony can walk away the Domokun
+        //This method it is going to calculate the longest path from the current position out of 5 different paths, 
+        //so the pony can run away the Domokun
         public static int[] calculateEscape(int direction)
         {
             int counter = 0;
             List<int> escapePath = new List<int>();
-            while (counter <= 10)
+            while (counter <= 5)
             {
                 maze = getMaze();
-                maze.positions[direction].hasBeenChecked = true;
                 int pos = maze.ponyPosition;
+                string posToDelete = maze.positions[pos].coordinates.FirstOrDefault(i => i.Value == direction).Key;
+
+                maze.positions[pos].coordinates.Remove(posToDelete);
+
                 List<int> temp = new List<int>();
 
                 while (true)
                 {
-                    Random rnd = new Random();
-                    int random = rnd.Next(1, 5);
 
-                    bool north = maze.positions[pos].north && !maze.positions[pos - 15].hasBeenChecked;
-                    bool west = maze.positions[pos].west && !maze.positions[pos - 1].hasBeenChecked;
-                    bool east = maze.positions[pos].east && !maze.positions[pos + 1].hasBeenChecked;
-                    bool south = maze.positions[pos].south && !maze.positions[pos + 15].hasBeenChecked;
-                    if (!north && !west && !east && !south)
+                    if (maze.positions[pos].coordinates.Count == 0)
                     {
                         if (temp.Count > escapePath.Count)
                         {
@@ -327,41 +280,13 @@ namespace Maze_TrustPilot
                     }
                     else
                     {
-                        switch (random)
-                        {
-                            case 1:
-                                if (north)
-                                {
-                                    maze.positions[pos].hasBeenChecked = true;
-                                    pos = pos - 15;
-                                    temp.Add(pos);
-                                }
-                                break;
-                            case 2:
-                                if (west)
-                                {
-                                    maze.positions[pos].hasBeenChecked = true;
-                                    pos = pos - 1;
-                                    temp.Add(pos);
-                                }
-                                break;
-                            case 3:
-                                if (east)
-                                {
-                                    maze.positions[pos].hasBeenChecked = true;
-                                    pos = pos + 1;
-                                    temp.Add(pos);
-                                }
-                                break;
-                            case 4:
-                                if (south)
-                                {
-                                    maze.positions[pos].hasBeenChecked = true;
-                                    pos = pos + 15;
-                                    temp.Add(pos);
-                                }
-                                break;
-                        }
+                        Random rnd = new Random();
+                        int random = rnd.Next(0, maze.positions[pos].coordinates.Count);
+                        KeyValuePair<string, int> x = maze.positions[pos].coordinates.ElementAt(random);
+                        posToDelete = maze.positions[x.Value].coordinates.FirstOrDefault(i => i.Value == pos).Key;
+                        maze.positions[x.Value].coordinates.Remove(posToDelete);
+                        pos = x.Value;
+                        temp.Add(pos);
                     }
                 }
             }
@@ -380,10 +305,9 @@ namespace Maze_TrustPilot
             int south = maze.domokunPosition + 15;
             int east = maze.domokunPosition + 1;
             int west = maze.domokunPosition - 1;
+            int[] possiblePositions = { north, south, east, west };
 
-            if (pos == north || pos == south || pos == east || pos == west ||
-                maze.ponyPosition == north || maze.ponyPosition == south ||
-                maze.ponyPosition == east || maze.ponyPosition == west)
+            if (possiblePositions.Contains(pos))
             {
                 return false;
 

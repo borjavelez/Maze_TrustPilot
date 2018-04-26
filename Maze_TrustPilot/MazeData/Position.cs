@@ -1,13 +1,13 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Maze_TrustPilot.MazeData
 {
     class Position
     {
-        //Walls: true if the pony can advance towards that direction.
-        public bool north { get; set; }
-        public bool west { get; set; }
-        public bool east { get; set; }
-        public bool south { get; set; }
+        //In a dictionary we will store the available directions as ints (positions) and
+        //the coordinates as strings
+        public Dictionary<string, int> coordinates { get; set; }
         public bool hasBeenChecked { get; set; }
 
         public Position()
